@@ -117,25 +117,25 @@ const FurnitureTryOnShowcase = () => {
 
             {/* Input Bar Form */}
             <form onSubmit={handleUrlSubmit} className="relative w-full max-w-md">
-              <div className="relative flex items-center bg-white rounded-full border border-neutral-300 shadow-sm hover:border-neutral-400 focus-within:border-[#7CB328] focus-within:ring-2 focus-within:ring-[#7CB328]/30 transition-all p-1.5 pl-5">
+              <div className="relative flex items-center bg-white rounded-full border border-neutral-300 shadow-sm hover:border-neutral-400 focus-within:border-[#7CB328] focus-within:ring-2 focus-within:ring-[#7CB328]/30 transition-all p-1 sm:p-1.5 pl-3.5 sm:pl-5">
                 <input
                   type="text"
                   value={productUrl}
                   onChange={(e) => setProductUrl(e.target.value)}
                   placeholder="Paste a product link..."
-                  className="w-full bg-transparent text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none pr-3"
+                  className="w-full min-w-0 bg-transparent text-xs sm:text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none pr-2"
                 />
                 <button
                   type="submit"
                   disabled={isAnalyzing}
-                  className="flex-shrink-0 inline-flex items-center justify-center gap-1 px-5 py-2.5 bg-[#84cc16] hover:bg-[#74b816] active:scale-95 text-neutral-950 font-bold text-xs sm:text-sm rounded-full transition-all shadow-sm"
+                  className="flex-shrink-0 inline-flex items-center justify-center gap-1 px-3.5 sm:px-5 py-2 sm:py-2.5 bg-[#84cc16] hover:bg-[#74b816] active:scale-95 text-neutral-950 font-bold text-xs sm:text-sm rounded-full transition-all shadow-sm"
                 >
                   {isAnalyzing ? (
-                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
                   ) : (
                     <>
                       <span>See it</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </>
                   )}
                 </button>
@@ -143,7 +143,7 @@ const FurnitureTryOnShowcase = () => {
             </form>
 
             {/* Activity Counter / Social Proof */}
-            <div className="flex items-center gap-2 mt-4 text-xs font-medium text-neutral-600">
+            <div className="flex items-center gap-2 mt-3.5 text-xs font-medium text-neutral-600">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#84cc16] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#84cc16]"></span>
@@ -152,12 +152,12 @@ const FurnitureTryOnShowcase = () => {
             </div>
 
             {/* Interactive helper pills */}
-            <div className="mt-6 pt-5 border-t border-neutral-200/70 flex flex-wrap items-center gap-2 max-w-md">
-              <span className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">Quick Try:</span>
+            <div className="mt-5 pt-4 sm:mt-6 sm:pt-5 border-t border-neutral-200/70 flex flex-wrap items-center gap-1.5 sm:gap-2 max-w-md">
+              <span className="text-[10px] sm:text-[11px] font-semibold text-neutral-400 uppercase tracking-wider">Quick Try:</span>
               <button
                 type="button"
                 onClick={() => handleSelectPreset(furnitureTryOnItems[4])}
-                className={`text-xs px-2.5 py-1 rounded-full transition-all border ${
+                className={`text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full transition-all border ${
                   selectedItem.id === 'lillehem-modular-sofa'
                     ? 'bg-[#84cc16]/15 border-[#84cc16] text-neutral-900 font-bold'
                     : 'bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300'
@@ -168,7 +168,7 @@ const FurnitureTryOnShowcase = () => {
               <button
                 type="button"
                 onClick={() => handleSelectPreset(furnitureTryOnItems[8])}
-                className={`text-xs px-2.5 py-1 rounded-full transition-all border ${
+                className={`text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full transition-all border ${
                   selectedItem.id === 'solid-wood-armchair'
                     ? 'bg-[#84cc16]/15 border-[#84cc16] text-neutral-900 font-bold'
                     : 'bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300'
@@ -179,7 +179,7 @@ const FurnitureTryOnShowcase = () => {
               <button
                 type="button"
                 onClick={() => handleSelectPreset(furnitureTryOnItems[0])}
-                className={`text-xs px-2.5 py-1 rounded-full transition-all border ${
+                className={`text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full transition-all border ${
                   selectedItem.id === 'latitude-run-sectional'
                     ? 'bg-[#84cc16]/15 border-[#84cc16] text-neutral-900 font-bold'
                     : 'bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300'
@@ -192,7 +192,7 @@ const FurnitureTryOnShowcase = () => {
 
           {/* RIGHT COLUMN: The Room Showcase (The 2nd Image) with Furniture Preview */}
           <div className="lg:col-span-7">
-            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-neutral-200/90 bg-neutral-900 group aspect-[16/10] sm:aspect-[16/10] w-full">
+            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-neutral-200/90 bg-neutral-900 group aspect-[4/3] sm:aspect-[16/10] w-full">
               {/* Room Image Display */}
               <AnimatePresence mode="wait">
                 <motion.img
@@ -211,13 +211,13 @@ const FurnitureTryOnShowcase = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
 
               {/* Top Controls Overlay: Empty vs Furnished Room toggle & Upload Custom Room */}
-              <div className="absolute top-3 left-3 right-3 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between gap-2 z-20">
+              <div className="absolute top-2.5 left-2.5 right-2.5 sm:top-4 sm:left-4 sm:right-4 flex items-center justify-between gap-1.5 sm:gap-2 z-20">
                 {/* Empty vs Furnished Toggle */}
-                <div className="inline-flex p-1 bg-black/60 backdrop-blur-md rounded-full border border-white/20">
+                <div className="inline-flex p-0.5 sm:p-1 bg-black/60 backdrop-blur-md rounded-full border border-white/20">
                   <button
                     type="button"
                     onClick={() => setViewMode('furnished')}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                    className={`px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold transition-all ${
                       viewMode === 'furnished'
                         ? 'bg-[#84cc16] text-neutral-950 shadow-sm'
                         : 'text-white/80 hover:text-white'
@@ -228,7 +228,7 @@ const FurnitureTryOnShowcase = () => {
                   <button
                     type="button"
                     onClick={() => setViewMode('empty')}
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                    className={`px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-semibold transition-all ${
                       viewMode === 'empty'
                         ? 'bg-white text-neutral-950 shadow-sm'
                         : 'text-white/80 hover:text-white'
@@ -250,10 +250,10 @@ const FurnitureTryOnShowcase = () => {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-full border border-white/20 text-white text-xs font-medium transition-all shadow-sm"
+                    className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-full border border-white/20 text-white text-[10px] sm:text-xs font-medium transition-all shadow-sm"
                     title="Upload your own room photo"
                   >
-                    <Upload className="w-3.5 h-3.5 text-[#84cc16]" />
+                    <Upload className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#84cc16]" />
                     <span className="hidden sm:inline">Use My Room</span>
                   </button>
                 </div>
@@ -281,18 +281,18 @@ const FurnitureTryOnShowcase = () => {
               )}
 
               {/* FLOATING PILL AT BOTTOM OVERLAY (Exactly as shown in Image 1) */}
-              <div className="absolute bottom-3 left-3 right-3 sm:bottom-5 sm:left-5 sm:right-5 z-20">
-                <div className="bg-[#151614]/90 backdrop-blur-md text-white rounded-full py-2 px-3 sm:py-2.5 sm:px-5 flex items-center justify-between gap-3 shadow-2xl border border-white/15">
-                  <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
+              <div className="absolute bottom-2 left-2 right-2 sm:bottom-5 sm:left-5 sm:right-5 z-20">
+                <div className="bg-[#151614]/90 backdrop-blur-md text-white rounded-full py-1.5 px-3 sm:py-2.5 sm:px-5 flex items-center justify-between gap-2 sm:gap-3 shadow-2xl border border-white/15">
+                  <div className="flex items-center gap-1.5 sm:gap-3.5 min-w-0">
                     {/* Brand Pill */}
-                    <span className="bg-white text-neutral-950 text-[10px] sm:text-xs font-black px-2 py-0.5 rounded tracking-wider uppercase flex-shrink-0">
+                    <span className="bg-white text-neutral-950 text-[9px] sm:text-xs font-black px-1.5 py-0.5 sm:px-2 rounded tracking-wider uppercase flex-shrink-0">
                       {selectedItem.brand}
                     </span>
 
                     {/* Product Name & Dimensions */}
-                    <div className="truncate text-xs sm:text-sm font-medium text-neutral-100">
-                      <span>{selectedItem.name}</span>
-                      <span className="ml-2 font-mono text-[11px] sm:text-xs text-[#a3e635] font-normal">
+                    <div className="truncate text-[11px] sm:text-sm font-medium text-neutral-100 flex items-center gap-1.5">
+                      <span className="truncate">{selectedItem.name}</span>
+                      <span className="font-mono text-[9px] sm:text-xs text-[#a3e635] font-normal flex-shrink-0">
                         {selectedItem.dimensions}
                       </span>
                     </div>
@@ -302,7 +302,7 @@ const FurnitureTryOnShowcase = () => {
                   <button
                     type="button"
                     onClick={() => navigate('/try-with-ai')}
-                    className="flex-shrink-0 inline-flex items-center gap-1 text-xs sm:text-sm font-bold text-[#84cc16] hover:text-[#a3e635] hover:underline transition-all group"
+                    className="flex-shrink-0 inline-flex items-center gap-1 text-[11px] sm:text-sm font-bold text-[#84cc16] hover:text-[#a3e635] hover:underline transition-all group"
                   >
                     <span>try it</span>
                     <span className="group-hover:translate-x-1 transition-transform">→</span>
@@ -314,9 +314,9 @@ const FurnitureTryOnShowcase = () => {
         </div>
 
         {/* BOTTOM CAROUSEL / ROW OF FURNITURE PRODUCTS (Exactly as shown in Image 1) */}
-        <div className="mt-10 sm:mt-12 pt-6 border-t border-neutral-200/80">
+        <div className="mt-8 sm:mt-12 pt-5 sm:pt-6 border-t border-neutral-200/80">
           <div className="flex items-center justify-between mb-3 px-1">
-            <p className="text-xs font-bold uppercase tracking-wider text-neutral-500">
+            <p className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-neutral-500">
               Popular items tried by customers
             </p>
             {/* Scroll navigation arrows */}
@@ -343,7 +343,7 @@ const FurnitureTryOnShowcase = () => {
           {/* Horizontal Card Track */}
           <div
             ref={carouselRef}
-            className="flex items-stretch gap-3 sm:gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none scroll-smooth snap-x"
+            className="flex items-stretch gap-2.5 sm:gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none scroll-smooth snap-x -mx-4 px-4 sm:mx-0 sm:px-0"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {furnitureTryOnItems.map((item) => {
@@ -352,14 +352,14 @@ const FurnitureTryOnShowcase = () => {
                 <div
                   key={item.id}
                   onClick={() => handleSelectPreset(item)}
-                  className={`flex-shrink-0 w-32 sm:w-36 md:w-40 bg-white rounded-xl sm:rounded-2xl p-2.5 cursor-pointer transition-all duration-200 snap-start flex flex-col justify-between select-none ${
+                  className={`flex-shrink-0 w-28 sm:w-36 md:w-40 bg-white rounded-xl sm:rounded-2xl p-2 sm:p-2.5 cursor-pointer transition-all duration-200 snap-start flex flex-col justify-between select-none ${
                     isSelected
                       ? 'border-2 border-[#84cc16] ring-2 ring-[#84cc16]/20 bg-lime-50/15 shadow-md scale-[1.02]'
                       : 'border border-neutral-200 hover:border-neutral-300 hover:shadow-sm'
                   }`}
                 >
                   {/* Thumbnail Image */}
-                  <div className="w-full h-24 sm:h-28 bg-[#F7F7F6] rounded-lg sm:rounded-xl overflow-hidden flex items-center justify-center p-2 mb-2 relative">
+                  <div className="w-full h-20 sm:h-28 bg-[#F7F7F6] rounded-lg sm:rounded-xl overflow-hidden flex items-center justify-center p-1.5 sm:p-2 mb-1.5 sm:mb-2 relative">
                     <img
                       src={item.image}
                       alt={item.name}
@@ -367,19 +367,19 @@ const FurnitureTryOnShowcase = () => {
                       loading="lazy"
                     />
                     {isSelected && (
-                      <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#84cc16]" />
+                      <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#84cc16]" />
                     )}
                   </div>
 
                   {/* Brand and Time metadata line */}
-                  <div className="flex items-center justify-between text-[10px] text-neutral-400 font-medium mb-1">
-                    <span className="font-bold text-neutral-700 truncate max-w-[65px]">{item.brand}</span>
+                  <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-neutral-400 font-medium mb-1">
+                    <span className="font-bold text-neutral-700 truncate max-w-[55px] sm:max-w-[65px]">{item.brand}</span>
                     <span className="flex-shrink-0">{item.time}</span>
                   </div>
 
                   {/* Product Title */}
                   <h4
-                    className="text-[11px] sm:text-xs font-semibold text-neutral-800 line-clamp-2 leading-tight"
+                    className="text-[10px] sm:text-xs font-semibold text-neutral-800 line-clamp-2 leading-tight"
                     title={item.name}
                   >
                     {item.name}

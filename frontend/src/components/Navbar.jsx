@@ -322,6 +322,13 @@ const Navbar = () => {
 
             {/* Mobile Hamburger & Quick CTA */}
             <div className="flex lg:hidden items-center gap-2 sm:gap-3">
+              <Link
+                to="/ai-interior-designer"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-amber-500/10 border border-amber-500/40 text-studio-charcoal text-[11px] uppercase tracking-wider font-semibold hover:bg-amber-500 hover:text-black transition-all"
+              >
+                <Sparkles className="w-3 h-3 text-amber-600" />
+                <span>Try AI</span>
+              </Link>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Toggle Navigation Menu"
@@ -342,7 +349,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 top-[60px] sm:top-[68px] z-30 bg-studio-bg flex flex-col justify-between p-6 sm:p-8 lg:hidden overflow-y-auto"
+            className="fixed inset-0 top-[60px] sm:top-[68px] z-30 bg-studio-bg flex flex-col justify-between p-5 sm:p-8 lg:hidden overflow-y-auto pb-24"
           >
             <div className="space-y-6">
               <div>

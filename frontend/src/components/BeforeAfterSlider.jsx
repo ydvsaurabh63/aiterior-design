@@ -95,13 +95,13 @@ const BeforeAfterSlider = ({ originalImage, generatedImage, roomType, styleName 
         </div>
 
         {/* 3. Overlay Badges */}
-        <div className="absolute top-3.5 left-3.5 bg-black/85 text-white text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] px-3 py-1.5 backdrop-blur-md border border-white/20 select-none pointer-events-none z-10 shadow-md">
-          BEFORE (ORIGINAL)
+        <div className="absolute top-2.5 left-2.5 sm:top-3.5 sm:left-3.5 bg-black/85 text-white text-[9px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] px-2 sm:px-3 py-1 sm:py-1.5 backdrop-blur-md border border-white/20 select-none pointer-events-none z-10 shadow-md">
+          BEFORE
         </div>
 
-        <div className="absolute top-3.5 right-3.5 bg-studio-bronze text-white text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] px-3 py-1.5 backdrop-blur-md border border-amber-300 select-none pointer-events-none flex items-center gap-1.5 z-10 shadow-md">
-          <Sparkles className="w-3.5 h-3.5 text-white" />
-          <span>AFTER ({styleName.toUpperCase()})</span>
+        <div className="absolute top-2.5 right-2.5 sm:top-3.5 sm:right-3.5 bg-studio-bronze text-white text-[9px] sm:text-xs font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] px-2 sm:px-3 py-1 sm:py-1.5 backdrop-blur-md border border-amber-300 select-none pointer-events-none flex items-center gap-1 sm:gap-1.5 z-10 shadow-md max-w-[55%] truncate">
+          <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white flex-shrink-0" />
+          <span className="truncate">AFTER ({styleName.toUpperCase()})</span>
         </div>
 
         {/* 4. Vertical Draggable Divider Line & Handle */}
@@ -113,8 +113,8 @@ const BeforeAfterSlider = ({ originalImage, generatedImage, roomType, styleName 
           <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-0.5 bg-white shadow-[0_0_10px_rgba(0,0,0,0.8)]" />
 
           {/* Circular handle */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border-2 border-studio-charcoal shadow-2xl flex items-center justify-center pointer-events-auto cursor-ew-resize hover:scale-110 active:scale-95 transition-transform group">
-            <ChevronsLeftRight className="w-5 h-5 text-studio-charcoal group-hover:text-studio-bronze transition-colors" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-white border-2 border-studio-charcoal shadow-2xl flex items-center justify-center pointer-events-auto cursor-ew-resize hover:scale-110 active:scale-95 transition-transform group">
+            <ChevronsLeftRight className="w-4 h-4 sm:w-5 sm:h-5 text-studio-charcoal group-hover:text-studio-bronze transition-colors" />
           </div>
         </div>
       </div>

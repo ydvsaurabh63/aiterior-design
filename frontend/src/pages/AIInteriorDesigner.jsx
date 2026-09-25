@@ -264,20 +264,20 @@ const AIInteriorDesigner = () => {
 
           {/* Right Column: Interactive Visualization Canvas (7 cols) */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="bg-white border border-studio-border p-6 sm:p-8 shadow-sm">
-              <div className="border-b border-studio-border/60 pb-4 mb-6 flex items-center justify-between">
+            <div className="bg-white border border-studio-border p-4 sm:p-6 md:p-8 shadow-sm">
+              <div className="border-b border-studio-border/60 pb-3 sm:pb-4 mb-4 sm:mb-6 flex items-center justify-between gap-2">
                 <div>
-                  <h2 className="text-lg font-serif text-studio-charcoal font-semibold uppercase tracking-wider">
+                  <h2 className="text-base sm:text-lg font-serif text-studio-charcoal font-semibold uppercase tracking-wider">
                     {generatedResult ? 'YOUR AI GENERATED RESULT' : 'DESIGN VISUALIZATION'}
                   </h2>
-                  <p className="text-xs text-studio-muted font-light">
+                  <p className="text-[11px] sm:text-xs text-studio-muted font-light">
                     {generatedResult
                       ? 'Photorealistic AI interior transformation of your room'
                       : 'Step-by-step room transformation workflow'}
                   </p>
                 </div>
                 {generatedResult && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 border border-amber-200 text-amber-800 text-[10px] uppercase tracking-wider font-bold">
+                  <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 bg-amber-50 border border-amber-200 text-amber-800 text-[9px] sm:text-[10px] uppercase tracking-wider font-bold flex-shrink-0">
                     <Sparkles className="w-3 h-3 text-amber-600" />
                     <span>Redesign Complete</span>
                   </span>
@@ -299,41 +299,41 @@ const AIInteriorDesigner = () => {
 
 
                   {/* Result Actions Bar */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
                     <button
                       type="button"
                       onClick={handleGenerateAgain}
-                      className="py-3 px-3 border border-studio-charcoal text-studio-charcoal hover:bg-studio-charcoal hover:text-white text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-1.5 text-center cursor-pointer"
+                      className="py-2.5 sm:py-3 px-2 sm:px-3 border border-studio-charcoal text-studio-charcoal hover:bg-studio-charcoal hover:text-white text-[10px] sm:text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-1 sm:gap-1.5 text-center cursor-pointer"
                     >
-                      <RefreshCw className="w-3.5 h-3.5 text-studio-bronze" />
-                      <span>Redesign Again</span>
+                      <RefreshCw className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-studio-bronze flex-shrink-0" />
+                      <span className="truncate">Redesign Again</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={handleDownloadImage}
-                      className="py-3 px-3 border border-studio-charcoal text-studio-charcoal hover:bg-studio-charcoal hover:text-white text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-1.5 text-center cursor-pointer"
+                      className="py-2.5 sm:py-3 px-2 sm:px-3 border border-studio-charcoal text-studio-charcoal hover:bg-studio-charcoal hover:text-white text-[10px] sm:text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-1 sm:gap-1.5 text-center cursor-pointer"
                     >
-                      <Download className="w-3.5 h-3.5 text-studio-bronze" />
+                      <Download className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-studio-bronze flex-shrink-0" />
                       <span>Download</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={handleTryAnotherStyle}
-                      className="py-3 px-3 border border-studio-border bg-white hover:border-studio-bronze text-studio-charcoal text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-1.5 text-center cursor-pointer"
+                      className="py-2.5 sm:py-3 px-2 sm:px-3 border border-studio-border bg-white hover:border-studio-bronze text-studio-charcoal text-[10px] sm:text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-1 sm:gap-1.5 text-center cursor-pointer"
                     >
-                      <Palette className="w-3.5 h-3.5 text-studio-bronze" />
-                      <span>Try Another Style</span>
+                      <Palette className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-studio-bronze flex-shrink-0" />
+                      <span className="truncate">New Style</span>
                     </button>
 
                     <button
                       type="button"
                       onClick={handleUploadAnotherRoom}
-                      className="py-3 px-3 border border-studio-border bg-white hover:border-studio-bronze text-studio-charcoal text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-1.5 text-center cursor-pointer"
+                      className="py-2.5 sm:py-3 px-2 sm:px-3 border border-studio-border bg-white hover:border-studio-bronze text-studio-charcoal text-[10px] sm:text-xs uppercase tracking-wider font-semibold transition-colors flex items-center justify-center gap-1 sm:gap-1.5 text-center cursor-pointer"
                     >
-                      <Upload className="w-3.5 h-3.5 text-studio-bronze" />
-                      <span>Upload Another Room</span>
+                      <Upload className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-studio-bronze flex-shrink-0" />
+                      <span className="truncate">New Room</span>
                     </button>
                   </div>
 

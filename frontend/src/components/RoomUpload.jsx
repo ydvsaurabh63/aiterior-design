@@ -110,23 +110,23 @@ const RoomUpload = ({ selectedFile, imagePreview, onSelectFile, onRemoveFile }) 
             {selectedFile ? selectedFile.name : 'Uploaded Room Photo'}
           </div>
 
-          <div className="absolute bottom-3 right-3 flex items-center gap-2">
+          <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 flex items-center gap-1.5 sm:gap-2">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="px-3.5 py-1.5 bg-white text-studio-charcoal text-[11px] uppercase font-bold tracking-wider shadow-md hover:bg-studio-sand transition-colors cursor-pointer inline-flex items-center gap-1.5"
+              className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 bg-white text-studio-charcoal text-[10px] sm:text-[11px] uppercase font-bold tracking-wider shadow-md hover:bg-studio-sand transition-colors cursor-pointer inline-flex items-center gap-1 sm:gap-1.5"
             >
-              <RefreshCw className="w-3.5 h-3.5 text-studio-bronze" />
-              <span>Change Image</span>
+              <RefreshCw className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-studio-bronze" />
+              <span>Change</span>
             </button>
 
             <button
               type="button"
               onClick={onRemoveFile}
-              className="px-3.5 py-1.5 bg-red-600 text-white text-[11px] uppercase font-bold tracking-wider shadow-md hover:bg-red-700 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+              className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 bg-red-600 text-white text-[10px] sm:text-[11px] uppercase font-bold tracking-wider shadow-md hover:bg-red-700 transition-colors cursor-pointer inline-flex items-center gap-1 sm:gap-1.5"
             >
-              <X className="w-3.5 h-3.5" />
-              <span>Remove Image</span>
+              <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              <span>Remove</span>
             </button>
           </div>
         </div>
