@@ -1,24 +1,72 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight, Sparkles } from 'lucide-react';
-import { chairPairingItems } from '../data/pairingShowcaseItems';
+import { ChevronLeft, ChevronRight, ArrowRight, Sparkles, Layers } from 'lucide-react';
+import { pairingScenarios } from '../data/pairingShowcaseItems';
 
 const FurniturePairingShowcase = () => {
-  // Default to the 2nd item (Groton Dining Chair) as in the user's screenshot
-  const [currentIndex, setCurrentIndex] = useState(1);
-  const activeItem = chairPairingItems[currentIndex];
+  // Scenario state: 0 = Chairs, 1 = Rugs
+  const [scenarioIndex, setScenarioIndex] = useState(0);
 
+  // Active item index per scenario:
+  // Scenario 0 (Chairs) defaults to index 1 (Groton)
+  // Scenario 1 (Rugs) defaults to index 0 (Cream Shag)
+  const [activeItems, setActiveItems] = useState({
+    0: 1,
+    1: 0
+  });
+
+  const currentScenario = pairingScenarios[scenarioIndex];
+  const currentItemIndex = activeItems[scenarioIndex] ?? 0;
+  const activeItem = currentScenario.items[currentItemIndex] || currentScenario.items[0];
+
+  // Set active item for the current scenario
+  const handleSelectItem = (idx) => {
+    setActiveItems((prev) => ({
+      ...prev,
+      [scenarioIndex]: idx
+    }));
+  };
+
+  // Continuous slider navigation across items and scenarios
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? chairPairingItems.length - 1 : prev - 1));
+    if (currentItemIndex > 0) {
+      handleSelectItem(currentItemIndex - 1);
+    } else {
+      // Go to previous scenario's last item
+      const prevScenarioIndex =
+        scenarioIndex === 0 ? pairingScenarios.length - 1 : scenarioIndex - 1;
+      const prevItemsLength = pairingScenarios[prevScenarioIndex].items.length;
+      setScenarioIndex(prevScenarioIndex);
+      setActiveItems((prev) => ({
+        ...prev,
+        [prevScenarioIndex]: prevItemsLength - 1
+      }));
+    }
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev === chairPairingItems.length - 1 ? 0 : prev + 1));
+    if (currentItemIndex < currentScenario.items.length - 1) {
+      handleSelectItem(currentItemIndex + 1);
+    } else {
+      // Go to next scenario's first item
+      const nextScenarioIndex =
+        scenarioIndex === pairingScenarios.length - 1 ? 0 : scenarioIndex + 1;
+      setScenarioIndex(nextScenarioIndex);
+      setActiveItems((prev) => ({
+        ...prev,
+        [nextScenarioIndex]: 0
+      }));
+    }
+  };
+
+  // Switch scenario directly from tabs
+  const handleSwitchScenario = (newIndex) => {
+    setScenarioIndex(newIndex);
   };
 
   return (
-    <section className="relative py-16 sm:py-20 md:py-24 border-b border-neutral-200/80 overflow-hidden font-sans bg-[#FAF8F5]">
+    <section className="relative py-14 sm:py-20 md:py-24 border-b border-neutral-200/80 overflow-hidden font-sans bg-[#FAF8F5]">
       {/* Subtle architectural graph paper grid background matching the screenshot */}
       <div
         className="absolute inset-0 pointer-events-none opacity-40"
@@ -32,10 +80,34 @@ const FurniturePairingShowcase = () => {
       />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
           
-          {/* LEFT COLUMN: Heading, Subtext, "More examples ->" */}
+          {/* LEFT COLUMN: Heading, Subtext, Scenario Switcher Tabs, "More examples ->" */}
           <div className="lg:col-span-5 flex flex-col justify-center">
+            {/* Quick Scenario Slider Tabs */}
+            <div className="inline-flex items-center p-1 rounded-full bg-neutral-200/60 border border-neutral-300/80 mb-4 max-w-fit">
+              {pairingScenarios.map((sc, sIdx) => {
+                const isActive = scenarioIndex === sIdx;
+                return (
+                  <button
+                    key={sc.id}
+                    type="button"
+                    onClick={() => handleSwitchScenario(sIdx)}
+                    className={`px-3 py-1 text-xs font-semibold rounded-full transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
+                      isActive
+                        ? 'bg-white text-neutral-900 shadow-sm font-bold'
+                        : 'text-neutral-600 hover:text-neutral-900'
+                    }`}
+                  >
+                    <span>{sc.label}</span>
+                    {isActive && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#84cc16]" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
             <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-neutral-900 tracking-tight leading-[1.15] mb-4 sm:mb-5">
               Not sure what goes with what?
             </h2>
@@ -45,7 +117,7 @@ const FurniturePairingShowcase = () => {
               nightstand for the bed, a rug under the sofa. You see at once what goes together.
             </p>
 
-            <div>
+            <div className="flex items-center gap-4">
               <Link
                 to="/try-with-ai"
                 className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-neutral-900 hover:text-studio-bronze transition-colors group"
@@ -53,31 +125,47 @@ const FurniturePairingShowcase = () => {
                 <span>More examples</span>
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </Link>
+
+              {/* Slider indicator dots */}
+              <div className="flex items-center gap-1.5 ml-4 pl-4 border-l border-neutral-300">
+                {pairingScenarios.map((_, sIdx) => (
+                  <button
+                    key={sIdx}
+                    onClick={() => handleSwitchScenario(sIdx)}
+                    className={`h-2 rounded-full transition-all ${
+                      scenarioIndex === sIdx
+                        ? 'w-6 bg-[#84cc16]'
+                        : 'w-2 bg-neutral-300 hover:bg-neutral-400'
+                    }`}
+                    aria-label={`Slide ${sIdx + 1}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* RIGHT COLUMN: The Room Showcase with Top Tag, Navigation Arrows & Chair Selector */}
+          {/* RIGHT COLUMN: The Room Showcase with Top Tag, Navigation Arrows & Item Selector */}
           <div className="lg:col-span-7 flex flex-col gap-3 sm:gap-4">
             {/* The Main Room Image Container */}
-            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-neutral-300/80 bg-neutral-100 aspect-[4/3] sm:aspect-[16/10] w-full group">
+            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-neutral-300/80 bg-neutral-900 aspect-[4/3] sm:aspect-[16/10] w-full group">
               {/* Room Image with Smooth Crossfade Animation */}
               <AnimatePresence mode="wait">
                 <motion.img
                   key={activeItem.id}
                   src={activeItem.roomImage}
                   alt={activeItem.name}
-                  initial={{ opacity: 0.7 }}
+                  initial={{ opacity: 0.65 }}
                   animate={{ opacity: 1 }}
-                  exit={{ opacity: 0.7 }}
+                  exit={{ opacity: 0.65 }}
                   transition={{ duration: 0.3 }}
                   className="w-full h-full object-cover object-center select-none"
                 />
               </AnimatePresence>
 
-              {/* Floating Tag in Top-Left Corner: "Which chairs go here?" */}
+              {/* Floating Tag in Top-Left Corner (e.g. "Which chairs go here?" or "Which rug goes here?") */}
               <div className="absolute top-2.5 left-2.5 sm:top-5 sm:left-5 z-20">
                 <div className="bg-white/95 backdrop-blur-md text-neutral-900 text-[10px] sm:text-xs md:text-sm font-bold px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md border border-black/5 flex items-center gap-1.5">
-                  <span>{activeItem.tag}</span>
+                  <span>{currentScenario.tag}</span>
                 </div>
               </div>
 
@@ -85,8 +173,8 @@ const FurniturePairingShowcase = () => {
               <button
                 type="button"
                 onClick={handlePrev}
-                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-neutral-800 flex items-center justify-center shadow-lg transition-all hover:scale-105 active:scale-95 border border-black/10"
-                aria-label="Previous chair"
+                className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-neutral-800 flex items-center justify-center shadow-lg transition-all hover:scale-105 active:scale-95 border border-black/10 cursor-pointer"
+                aria-label="Previous item"
               >
                 <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
@@ -95,8 +183,8 @@ const FurniturePairingShowcase = () => {
               <button
                 type="button"
                 onClick={handleNext}
-                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-neutral-800 flex items-center justify-center shadow-lg transition-all hover:scale-105 active:scale-95 border border-black/10"
-                aria-label="Next chair"
+                className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-white/90 hover:bg-white text-neutral-800 flex items-center justify-center shadow-lg transition-all hover:scale-105 active:scale-95 border border-black/10 cursor-pointer"
+                aria-label="Next item"
               >
                 <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
@@ -110,7 +198,7 @@ const FurniturePairingShowcase = () => {
                       {activeItem.brand}
                     </span>
 
-                    {/* Chair Title */}
+                    {/* Item Title */}
                     <span className="text-[11px] sm:text-sm font-semibold truncate text-neutral-900">
                       {activeItem.name}
                     </span>
@@ -124,26 +212,28 @@ const FurniturePairingShowcase = () => {
               </div>
             </div>
 
-            {/* Bottom Chair Selection Cards (Horizontal Grid/Row matching the screenshot) */}
+            {/* Bottom Selection Cards (3 items for the active scenario) */}
             <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-1">
-              {chairPairingItems.map((item, idx) => {
-                const isSelected = currentIndex === idx;
+              {currentScenario.items.map((item, idx) => {
+                const isSelected = currentItemIndex === idx;
                 return (
                   <div
                     key={item.id}
-                    onClick={() => setCurrentIndex(idx)}
+                    onClick={() => handleSelectItem(idx)}
                     className={`bg-white rounded-xl sm:rounded-2xl p-1.5 sm:p-3 cursor-pointer transition-all duration-200 flex flex-col justify-between select-none ${
                       isSelected
                         ? 'border-2 border-[#84cc16] ring-2 ring-[#84cc16]/25 bg-lime-50/15 shadow-md scale-[1.01]'
                         : 'border border-neutral-200/90 hover:border-neutral-300 hover:shadow-sm'
                     }`}
                   >
-                    {/* Chair Thumbnail on clean background */}
+                    {/* Item Thumbnail on clean background */}
                     <div className="w-full h-16 sm:h-24 md:h-28 bg-[#FAFAFA] rounded-lg sm:rounded-xl overflow-hidden flex items-center justify-center p-1 sm:p-2 mb-1.5 relative">
                       <img
                         src={item.thumbnail}
                         alt={item.name}
-                        className="w-full h-full object-contain mix-blend-multiply transition-transform hover:scale-105"
+                        className={`w-full h-full object-contain ${
+                          scenarioIndex === 0 ? 'mix-blend-multiply' : 'rounded-md shadow-xs'
+                        } transition-transform hover:scale-105`}
                       />
                       {isSelected && (
                         <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#84cc16]" />
@@ -156,7 +246,9 @@ const FurniturePairingShowcase = () => {
                         <span className="font-bold uppercase tracking-tight text-neutral-900 text-[9px] sm:text-[10px]">
                           {item.brand}
                         </span>
-                        <span className="truncate font-semibold text-[9px] sm:text-[11px]">{item.name.split(' ')[0]}</span>
+                        <span className="truncate font-semibold text-[9px] sm:text-[11px]">
+                          {item.name.split(' ')[0]}
+                        </span>
                       </div>
                       <span className="font-mono text-neutral-400 text-[8px] sm:text-[10px] flex-shrink-0 ml-1">
                         {item.dimensions}
