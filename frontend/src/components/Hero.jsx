@@ -85,10 +85,9 @@ const Hero = () => {
           <source src={activeScene.fallbackSrc} type="video/mp4" />
         </video>
 
-        {/* Multi-layered cinematic gradient overlays for luxury editorial contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-studio-dark via-studio-dark/75 to-studio-dark/50" />
-        <div className="absolute inset-0 bg-black/35" />
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-black/20 to-black/60 pointer-events-none" />
+        {/* Lightened, subtle overlay so background video is clearly visible */}
+        <div className="absolute inset-0 bg-black/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none" />
       </div>
 
       {/* Floating Interactive Video Scene Controller - Responsive Positioning */}

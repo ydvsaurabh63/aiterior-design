@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   Maximize2,
   RefreshCw,
+  RotateCcw,
   Eye,
   SlidersHorizontal,
   Info
@@ -21,6 +22,11 @@ const FurnitureTryOnShowcase = () => {
   const navigate = useNavigate();
   const carouselRef = useRef(null);
   const fileInputRef = useRef(null);
+  const isPausedRef = useRef(false);
+  const resumeTimeoutRef = useRef(null);
+
+  // Duplicate items for seamless infinite marquee loop
+  const displayItems = [...furnitureTryOnItems, ...furnitureTryOnItems];
 
   // Default active item is LILLEHEM (item 5, index 4) as in the reference image
   const [selectedItem, setSelectedItem] = useState(
@@ -33,11 +39,50 @@ const FurnitureTryOnShowcase = () => {
   const [customRoomImage, setCustomRoomImage] = useState(null);
   const [showHotspot, setShowHotspot] = useState(true);
 
+  // Smooth continuous auto-scroll moving products right to left
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+
+    let animId;
+    let lastTime = performance.now();
+    const speedPxPerSecond = 35; // gentle, readable continuous gliding
+
+    const step = (now) => {
+      const delta = (now - lastTime) / 1000;
+      lastTime = now;
+
+      if (!isPausedRef.current && el) {
+        const halfWidth = el.scrollWidth / 2;
+        if (halfWidth > 0 && el.scrollLeft >= halfWidth) {
+          el.scrollLeft -= halfWidth;
+        } else {
+          el.scrollLeft += speedPxPerSecond * delta;
+        }
+      }
+      animId = requestAnimationFrame(step);
+    };
+
+    animId = requestAnimationFrame(step);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      clearTimeout(resumeTimeoutRef.current);
+    };
+  }, []);
+
   // Horizontal scroll controls for carousel
   const scroll = (direction) => {
     if (carouselRef.current) {
+      isPausedRef.current = true;
       const scrollAmount = direction === 'left' ? -260 : 260;
       carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+
+      // Resume auto-scroll after 2.5 seconds
+      clearTimeout(resumeTimeoutRef.current);
+      resumeTimeoutRef.current = setTimeout(() => {
+        isPausedRef.current = false;
+      }, 2500);
     }
   };
 
@@ -71,18 +116,32 @@ const FurnitureTryOnShowcase = () => {
   const handleRoomUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload a valid image file (JPG, PNG, or WebP)');
+        return;
+      }
       const url = URL.createObjectURL(file);
       setCustomRoomImage(url);
       setViewMode('furnished');
-      toast.success('Your room photo uploaded! Placing furniture in space...');
+      toast.success('Your room photo uploaded! Placing furniture in your space...');
     }
   };
 
+  // Revert back to curated sample room
+  const handleResetRoom = () => {
+    setCustomRoomImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    toast.success('Reverted to demo curated room');
+  };
+
   // Determine current active room background
-  const currentRoomSrc =
-    viewMode === 'empty'
-      ? customRoomImage || '/sample-rooms/room-showcase.jpg'
-      : customRoomImage || selectedItem.roomImage || '/sample-rooms/room-furnished-sofa.jpg';
+  const currentRoomSrc = customRoomImage
+    ? customRoomImage
+    : viewMode === 'empty'
+    ? '/sample-rooms/room-showcase.jpg'
+    : selectedItem.roomImage || '/sample-rooms/room-furnished-sofa.jpg';
 
   return (
     <section className="relative bg-[#FAF9F5] border-b border-neutral-200/80 pt-10 pb-14 sm:pt-14 sm:pb-20 overflow-hidden font-sans">
@@ -239,7 +298,19 @@ const FurnitureTryOnShowcase = () => {
                 </div>
 
                 {/* Upload your own room button */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  {customRoomImage && (
+                    <button
+                      type="button"
+                      onClick={handleResetRoom}
+                      className="inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-black/60 hover:bg-neutral-800 backdrop-blur-md rounded-full border border-white/20 text-neutral-300 hover:text-white text-[10px] sm:text-xs font-medium transition-all shadow-sm cursor-pointer"
+                      title="Reset to curated sample room"
+                    >
+                      <RotateCcw className="w-3 h-3 text-neutral-400" />
+                      <span className="hidden sm:inline">Reset</span>
+                    </button>
+                  )}
+
                   <input
                     ref={fileInputRef}
                     type="file"
@@ -250,18 +321,50 @@ const FurnitureTryOnShowcase = () => {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-full border border-white/20 text-white text-[10px] sm:text-xs font-medium transition-all shadow-sm"
+                    className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-full border border-white/20 text-white text-[10px] sm:text-xs font-medium transition-all shadow-sm cursor-pointer"
                     title="Upload your own room photo"
                   >
                     <Upload className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#84cc16]" />
-                    <span className="hidden sm:inline">Use My Room</span>
+                    <span className="hidden sm:inline">{customRoomImage ? 'Change Room' : 'Use My Room'}</span>
+                    <span className="sm:hidden">{customRoomImage ? 'Change' : 'Upload'}</span>
                   </button>
                 </div>
               </div>
 
+              {/* Dynamic Placed Furniture Overlay on User's Uploaded Room Photo */}
+              {customRoomImage && viewMode === 'furnished' && (
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`placed-furniture-${selectedItem.id}`}
+                    initial={{ opacity: 0, scale: 0.88, y: 15 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.92 }}
+                    transition={{ duration: 0.28 }}
+                    className="absolute bottom-[16%] sm:bottom-[18%] left-1/2 -translate-x-1/2 z-20 flex flex-col items-center pointer-events-auto"
+                  >
+                    {/* Realistic Floor Contact Ambient Shadow */}
+                    <div className="absolute -bottom-2 sm:-bottom-3 w-[88%] h-5 sm:h-7 bg-black/45 rounded-full blur-md" />
+
+                    {/* Furniture Cutout Image with Blend */}
+                    <img
+                      src={selectedItem.image}
+                      alt={selectedItem.name}
+                      className="max-h-40 sm:max-h-56 md:max-h-68 max-w-[85vw] sm:max-w-md object-contain mix-blend-multiply drop-shadow-2xl select-none"
+                      draggable={false}
+                    />
+                  </motion.div>
+                </AnimatePresence>
+              )}
+
               {/* Interactive Hotspot Marker on furniture in room */}
               {viewMode === 'furnished' && showHotspot && (
-                <div className="absolute bottom-[28%] left-[45%] z-20 pointer-events-auto">
+                <div
+                  className={`absolute z-20 pointer-events-auto transition-all duration-300 ${
+                    customRoomImage
+                      ? 'bottom-[34%] left-1/2 -translate-x-1/2'
+                      : 'bottom-[28%] left-[45%]'
+                  }`}
+                >
                   <div className="relative group/spot cursor-pointer">
                     <span className="animate-ping absolute inline-flex h-6 w-6 rounded-full bg-white opacity-60"></span>
                     <div className="relative inline-flex items-center justify-center w-6 h-6 rounded-full bg-white/90 text-neutral-900 shadow-lg border border-white">
@@ -298,13 +401,13 @@ const FurnitureTryOnShowcase = () => {
                     </div>
                   </div>
 
-                  {/* Right Button: "try it →" */}
+                  {/* Right Button: "Inquire →" */}
                   <button
                     type="button"
-                    onClick={() => navigate('/try-with-ai')}
+                    onClick={() => navigate('/contact')}
                     className="flex-shrink-0 inline-flex items-center gap-1 text-[11px] sm:text-sm font-bold text-[#84cc16] hover:text-[#a3e635] hover:underline transition-all group"
                   >
-                    <span>try it</span>
+                    <span>Inquire</span>
                     <span className="group-hover:translate-x-1 transition-transform">→</span>
                   </button>
                 </div>
@@ -343,16 +446,25 @@ const FurnitureTryOnShowcase = () => {
           {/* Horizontal Card Track */}
           <div
             ref={carouselRef}
-            className="flex items-stretch gap-2.5 sm:gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none scroll-smooth snap-x -mx-4 px-4 sm:mx-0 sm:px-0"
+            onMouseEnter={() => { isPausedRef.current = true; }}
+            onMouseLeave={() => { isPausedRef.current = false; }}
+            onTouchStart={() => { isPausedRef.current = true; }}
+            onTouchEnd={() => {
+              clearTimeout(resumeTimeoutRef.current);
+              resumeTimeoutRef.current = setTimeout(() => {
+                isPausedRef.current = false;
+              }, 2000);
+            }}
+            className="flex items-stretch gap-2.5 sm:gap-4 overflow-x-auto pb-4 pt-1 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 select-none cursor-grab active:cursor-grabbing"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {furnitureTryOnItems.map((item) => {
+            {displayItems.map((item, idx) => {
               const isSelected = selectedItem.id === item.id;
               return (
                 <div
-                  key={item.id}
+                  key={`${item.id}-${idx}`}
                   onClick={() => handleSelectPreset(item)}
-                  className={`flex-shrink-0 w-28 sm:w-36 md:w-40 bg-white rounded-xl sm:rounded-2xl p-2 sm:p-2.5 cursor-pointer transition-all duration-200 snap-start flex flex-col justify-between select-none ${
+                  className={`flex-shrink-0 w-28 sm:w-36 md:w-40 bg-white rounded-xl sm:rounded-2xl p-2 sm:p-2.5 cursor-pointer transition-all duration-200 flex flex-col justify-between select-none ${
                     isSelected
                       ? 'border-2 border-[#84cc16] ring-2 ring-[#84cc16]/20 bg-lime-50/15 shadow-md scale-[1.02]'
                       : 'border border-neutral-200 hover:border-neutral-300 hover:shadow-sm'

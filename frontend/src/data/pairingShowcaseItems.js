@@ -8,6 +8,7 @@ export const pairingScenarios = [
       {
         id: 'lisabo-chair',
         name: 'LISABÖ Dining Chair',
+        shortName: 'LISABÖ',
         brand: 'IKEA',
         dimensions: '18 × 20 × 31"',
         price: '$75',
@@ -19,6 +20,7 @@ export const pairingScenarios = [
       {
         id: 'groton-chair',
         name: 'Groton Dining Chair',
+        shortName: 'Groton',
         brand: 'amazon',
         dimensions: '18 × 21 × 37"',
         price: '$110',
@@ -31,6 +33,7 @@ export const pairingScenarios = [
       {
         id: 'corrigan-chair',
         name: 'Corrigan Studio Chair',
+        shortName: 'Corrigan',
         brand: 'Wayfair',
         dimensions: '22 × 22 × 30"',
         price: '$145',
@@ -50,6 +53,7 @@ export const pairingScenarios = [
       {
         id: 'cream-shag-rug',
         name: 'Cozy Plush Shag Rug',
+        shortName: 'Cozy Plush',
         brand: 'RUGGABLE',
         dimensions: '8\' × 10\'',
         price: '$289',
@@ -62,6 +66,7 @@ export const pairingScenarios = [
       {
         id: 'charcoal-distressed-rug',
         name: 'Abstract Charcoal Area Rug',
+        shortName: 'Charcoal',
         brand: 'LULU & GEORGIA',
         dimensions: '8\' × 10\'',
         price: '$345',
@@ -73,6 +78,7 @@ export const pairingScenarios = [
       {
         id: 'blue-vintage-rug',
         name: 'Vintage Medallion Indigo Rug',
+        shortName: 'Indigo Vintage',
         brand: 'SAFAVIEH',
         dimensions: '8\' × 10\'',
         price: '$260',
@@ -82,9 +88,58 @@ export const pairingScenarios = [
         description: 'Timeless Persian-inspired faded indigo floral medallion with subtle border.'
       }
     ]
+  },
+  {
+    id: 'walls',
+    tag: 'Which wall color goes here?',
+    roomType: 'Living Room',
+    label: 'Wall Paint Colors',
+    items: [
+      {
+        id: 'sage-green-paint',
+        name: 'Clary Sage (SW 6184)',
+        shortName: 'Sage Green',
+        brand: 'SHERWIN-WILLIAMS',
+        dimensions: 'Matte · 1 Gal',
+        colorHex: '#748068',
+        price: '$64',
+        thumbnail: '/walls-preview/thumb_sage.png',
+        roomImage: '/walls-preview/room_sage.jpg',
+        defaultSelected: true,
+        tag: 'Which wall color goes here?',
+        description: 'Calming organic herbal sage green bringing serene balance and natural harmony.'
+      },
+      {
+        id: 'terracotta-paint',
+        name: 'Red Earth (No. 64)',
+        shortName: 'Terracotta',
+        brand: 'FARROW & BALL',
+        dimensions: 'Eggshell · 1 Gal',
+        colorHex: '#B8583E',
+        price: '$72',
+        thumbnail: '/walls-preview/thumb_terracotta.png',
+        roomImage: '/walls-preview/room_terracotta.jpg',
+        tag: 'Which wall color goes here?',
+        description: 'Warm sun-baked clay terracotta creating cozy Mediterranean depth and tactile warmth.'
+      },
+      {
+        id: 'coastal-navy-paint',
+        name: 'Naval Midnight (SW 6244)',
+        shortName: 'Coastal Navy',
+        brand: 'SHERWIN-WILLIAMS',
+        dimensions: 'Satin · 1 Gal',
+        colorHex: '#223444',
+        price: '$68',
+        thumbnail: '/walls-preview/thumb_navy.png',
+        roomImage: '/walls-preview/room_navy.jpg',
+        tag: 'Which wall color goes here?',
+        description: 'Deep moody navy blue providing a dramatic, sophisticated and timeless backdrop.'
+      }
+    ]
   }
 ];
 
 // Backward-compatible exports
 export const chairPairingItems = pairingScenarios[0].items;
 export const rugPairingItems = pairingScenarios[1].items;
+export const wallPairingItems = pairingScenarios[2].items;

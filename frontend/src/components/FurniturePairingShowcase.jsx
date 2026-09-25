@@ -1,19 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, ArrowRight, Sparkles, Layers } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  ArrowRight,
+  Sparkles,
+  Layers,
+  Upload,
+  Image as ImageIcon,
+  RotateCcw,
+  SlidersHorizontal,
+  CheckCircle2
+} from 'lucide-react';
+import toast from 'react-hot-toast';
 import { pairingScenarios } from '../data/pairingShowcaseItems';
 
 const FurniturePairingShowcase = () => {
-  // Scenario state: 0 = Chairs, 1 = Rugs
+  const fileInputRef = useRef(null);
+
+  // Scenario state: 0 = Chairs, 1 = Rugs, 2 = Wall Paint
   const [scenarioIndex, setScenarioIndex] = useState(0);
+
+  // Custom uploaded photo from user's gallery
+  const [customRoomImage, setCustomRoomImage] = useState(null);
+  const [customRoomFileName, setCustomRoomFileName] = useState('');
+  const [paintIntensity, setPaintIntensity] = useState(55);
 
   // Active item index per scenario:
   // Scenario 0 (Chairs) defaults to index 1 (Groton)
   // Scenario 1 (Rugs) defaults to index 0 (Cream Shag)
+  // Scenario 2 (Walls) defaults to index 0 (Sage Green)
   const [activeItems, setActiveItems] = useState({
     0: 1,
-    1: 0
+    1: 0,
+    2: 0
   });
 
   const currentScenario = pairingScenarios[scenarioIndex];
@@ -26,6 +47,33 @@ const FurniturePairingShowcase = () => {
       ...prev,
       [scenarioIndex]: idx
     }));
+  };
+
+  // Handle gallery photo upload
+  const handleFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error('Please upload a valid image file (JPG, PNG, or WebP)');
+        return;
+      }
+      const url = URL.createObjectURL(file);
+      setCustomRoomImage(url);
+      setCustomRoomFileName(file.name);
+      // Auto-switch to Wall Paint Colors scenario to visualize colors immediately
+      setScenarioIndex(2);
+      toast.success('Room photo uploaded from gallery! Now pick any paint color below.');
+    }
+  };
+
+  // Reset to default sample curated room
+  const handleResetCustomImage = () => {
+    setCustomRoomImage(null);
+    setCustomRoomFileName('');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+    toast.success('Reverted to curated sample room');
   };
 
   // Continuous slider navigation across items and scenarios
@@ -67,6 +115,15 @@ const FurniturePairingShowcase = () => {
 
   return (
     <section className="relative py-14 sm:py-20 md:py-24 border-b border-neutral-200/80 overflow-hidden font-sans bg-[#FAF8F5]">
+      {/* Hidden file input for gallery upload */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileUpload}
+        className="hidden"
+      />
+
       {/* Subtle architectural graph paper grid background matching the screenshot */}
       <div
         className="absolute inset-0 pointer-events-none opacity-40"
@@ -82,7 +139,7 @@ const FurniturePairingShowcase = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
           
-          {/* LEFT COLUMN: Heading, Subtext, Scenario Switcher Tabs, "More examples ->" */}
+          {/* LEFT COLUMN: Heading, Subtext, Scenario Switcher Tabs, Gallery Upload, "More examples ->" */}
           <div className="lg:col-span-5 flex flex-col justify-center">
             {/* Quick Scenario Slider Tabs */}
             <div className="inline-flex items-center p-1 rounded-full bg-neutral-200/60 border border-neutral-300/80 mb-4 max-w-fit">
@@ -112,17 +169,113 @@ const FurniturePairingShowcase = () => {
               Not sure what goes with what?
             </h2>
 
-            <p className="text-sm sm:text-base text-neutral-600 font-normal leading-relaxed mb-6 sm:mb-8 max-w-md">
-              Keep the room exactly as it is and try the piece you are missing — chairs for your table, a
-              nightstand for the bed, a rug under the sofa. You see at once what goes together.
+            <p className="text-sm sm:text-base text-neutral-600 font-normal leading-relaxed mb-5 max-w-md">
+              Keep the room exactly as it is and try what you are missing — chairs for your table, a rug
+              under the sofa, or designer paint colors for your walls. You see at once what goes together.
             </p>
+
+            {/* GALLERY PHOTO UPLOAD SECTION */}
+            <div className="mb-6 p-3.5 sm:p-4 rounded-2xl bg-white border border-neutral-200/90 shadow-sm">
+              {!customRoomImage ? (
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-lime-100/70 text-lime-700 flex items-center justify-center flex-shrink-0">
+                      <Upload className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-xs sm:text-sm font-semibold text-neutral-900">
+                        Try with your own room photo
+                      </p>
+                      <p className="text-[11px] text-neutral-500">
+                        Upload from gallery to visualize wall colors on your room
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-3.5 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95 whitespace-nowrap"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>Upload from Gallery</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-10 h-10 rounded-lg overflow-hidden border border-neutral-300 flex-shrink-0 bg-neutral-100">
+                        <img
+                          src={customRoomImage}
+                          alt="Uploaded Room"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#84cc16] animate-pulse" />
+                          <p className="text-xs font-bold text-neutral-900 truncate">
+                            Your Gallery Photo Active
+                          </p>
+                        </div>
+                        <p className="text-[10px] text-neutral-500 truncate font-mono">
+                          {customRoomFileName || 'Custom Photo'}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-2.5 py-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-800 text-[11px] font-medium transition-colors cursor-pointer"
+                      >
+                        Change
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleResetCustomImage}
+                        className="p-1.5 rounded-lg hover:bg-red-50 text-neutral-400 hover:text-red-600 transition-colors cursor-pointer"
+                        title="Revert to sample curated room"
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Paint Shade Intensity slider when Wall Paint Colors scenario is active */}
+                  {scenarioIndex === 2 && (
+                    <div className="pt-2 border-t border-neutral-100 flex items-center justify-between gap-3 text-xs">
+                      <div className="flex items-center gap-1.5 text-neutral-600">
+                        <SlidersHorizontal className="w-3.5 h-3.5 text-neutral-500" />
+                        <span className="text-[11px] font-medium">Color Blend Intensity:</span>
+                      </div>
+                      <div className="flex items-center gap-2 flex-1 max-w-[150px]">
+                        <input
+                          type="range"
+                          min="20"
+                          max="85"
+                          value={paintIntensity}
+                          onChange={(e) => setPaintIntensity(Number(e.target.value))}
+                          className="w-full h-1.5 bg-neutral-200 rounded-lg appearance-none cursor-pointer accent-[#84cc16]"
+                        />
+                        <span className="text-[11px] font-mono text-neutral-500 w-8 text-right">
+                          {paintIntensity}%
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
 
             <div className="flex items-center gap-4">
               <Link
-                to="/try-with-ai"
+                to="/projects"
                 className="inline-flex items-center gap-2 text-sm sm:text-base font-semibold text-neutral-900 hover:text-studio-bronze transition-colors group"
               >
-                <span>More examples</span>
+                <span>Explore Projects</span>
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </Link>
 
@@ -144,30 +297,66 @@ const FurniturePairingShowcase = () => {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: The Room Showcase with Top Tag, Navigation Arrows & Item Selector */}
+          {/* RIGHT COLUMN: The Room Showcase with Top Tag, Gallery Button, Navigation Arrows & Item Selector */}
           <div className="lg:col-span-7 flex flex-col gap-3 sm:gap-4">
             {/* The Main Room Image Container */}
             <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-neutral-300/80 bg-neutral-900 aspect-[4/3] sm:aspect-[16/10] w-full group">
-              {/* Room Image with Smooth Crossfade Animation */}
+              {/* Room Image with Smooth Crossfade Animation & Live Color Blending for Gallery Uploads */}
               <AnimatePresence mode="wait">
-                <motion.img
-                  key={activeItem.id}
-                  src={activeItem.roomImage}
-                  alt={activeItem.name}
+                <motion.div
+                  key={customRoomImage ? `custom-${activeItem.id}` : activeItem.id}
+                  className="relative w-full h-full"
                   initial={{ opacity: 0.65 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0.65 }}
                   transition={{ duration: 0.3 }}
-                  className="w-full h-full object-cover object-center select-none"
-                />
+                >
+                  <img
+                    src={customRoomImage || activeItem.roomImage}
+                    alt={customRoomImage ? 'Your Room' : activeItem.name}
+                    className="w-full h-full object-cover object-center select-none"
+                  />
+
+                  {/* If custom room photo is uploaded and Wall Paint scenario is active: Realistic Color Blend Overlay */}
+                  {customRoomImage && scenarioIndex === 2 && activeItem.colorHex && (
+                    <>
+                      <div
+                        className="absolute inset-0 pointer-events-none transition-all duration-300"
+                        style={{
+                          backgroundColor: activeItem.colorHex,
+                          mixBlendMode: 'multiply',
+                          opacity: (paintIntensity / 100) * 0.75
+                        }}
+                      />
+                      <div
+                        className="absolute inset-0 pointer-events-none transition-all duration-300"
+                        style={{
+                          backgroundColor: activeItem.colorHex,
+                          mixBlendMode: 'color',
+                          opacity: (paintIntensity / 100) * 0.65
+                        }}
+                      />
+                    </>
+                  )}
+                </motion.div>
               </AnimatePresence>
 
-              {/* Floating Tag in Top-Left Corner (e.g. "Which chairs go here?" or "Which rug goes here?") */}
+              {/* Floating Tag in Top-Left Corner */}
               <div className="absolute top-2.5 left-2.5 sm:top-5 sm:left-5 z-20">
                 <div className="bg-white/95 backdrop-blur-md text-neutral-900 text-[10px] sm:text-xs md:text-sm font-bold px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-md border border-black/5 flex items-center gap-1.5">
-                  <span>{currentScenario.tag}</span>
+                  <span>{customRoomImage ? 'Your Uploaded Room' : currentScenario.tag}</span>
                 </div>
               </div>
+
+              {/* Floating Button in Top-Right Corner for quick Gallery Upload */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute top-2.5 right-2.5 sm:top-5 sm:right-5 z-20 bg-white/95 backdrop-blur-md hover:bg-white text-neutral-900 text-[10px] sm:text-xs font-semibold px-2.5 sm:px-3.5 py-1.5 rounded-full shadow-md border border-black/10 flex items-center gap-1.5 transition-all cursor-pointer hover:scale-105 active:scale-95"
+              >
+                <Upload className="w-3.5 h-3.5 text-neutral-700" />
+                <span>{customRoomImage ? 'Change Photo' : 'Upload Gallery'}</span>
+              </button>
 
               {/* Navigation Arrow Left */}
               <button
@@ -193,6 +382,15 @@ const FurniturePairingShowcase = () => {
               <div className="absolute bottom-2 left-2 right-2 sm:bottom-4 sm:left-5 sm:right-5 z-20">
                 <div className="bg-white/95 backdrop-blur-md rounded-full py-1.5 px-3 sm:py-2.5 sm:px-5 flex items-center justify-between shadow-lg border border-black/10 text-neutral-900 gap-2">
                   <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
+                    {/* Optional Color swatch preview if available */}
+                    {activeItem.colorHex && (
+                      <span
+                        className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border border-black/20 shadow-inner flex-shrink-0"
+                        style={{ backgroundColor: activeItem.colorHex }}
+                        title={activeItem.name}
+                      />
+                    )}
+
                     {/* Brand Identifier */}
                     <span className="text-[9px] sm:text-xs font-black tracking-wider uppercase text-neutral-800 font-mono flex-shrink-0">
                       {activeItem.brand}
@@ -204,7 +402,7 @@ const FurniturePairingShowcase = () => {
                     </span>
                   </div>
 
-                  {/* Dimensions */}
+                  {/* Dimensions / Finish */}
                   <span className="text-[9px] sm:text-xs font-mono text-neutral-500 font-normal flex-shrink-0 ml-1">
                     {activeItem.dimensions}
                   </span>
@@ -242,12 +440,18 @@ const FurniturePairingShowcase = () => {
 
                     {/* Bottom Metadata: Brand + Name + Dimensions */}
                     <div className="flex items-center justify-between text-[9px] sm:text-[11px] text-neutral-700 font-medium">
-                      <div className="flex items-center gap-1 truncate">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        {item.colorHex && (
+                          <span
+                            className="w-2.5 h-2.5 rounded-full border border-black/15 flex-shrink-0"
+                            style={{ backgroundColor: item.colorHex }}
+                          />
+                        )}
                         <span className="font-bold uppercase tracking-tight text-neutral-900 text-[9px] sm:text-[10px]">
                           {item.brand}
                         </span>
                         <span className="truncate font-semibold text-[9px] sm:text-[11px]">
-                          {item.name.split(' ')[0]}
+                          {item.shortName || item.name.split(' ')[0]}
                         </span>
                       </div>
                       <span className="font-mono text-neutral-400 text-[8px] sm:text-[10px] flex-shrink-0 ml-1">

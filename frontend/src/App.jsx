@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -75,9 +75,9 @@ function App() {
           {/* Contact & Consultation */}
           <Route path="/contact" element={<Contact />} />
 
-          {/* AI Spatial Visualizer */}
-          <Route path="/try-with-ai" element={<AIInteriorDesigner />} />
-          <Route path="/ai-interior-designer" element={<AIInteriorDesigner />} />
+          {/* Redirect deprecated AI routes to Home */}
+          <Route path="/try-with-ai" element={<Navigate to="/" replace />} />
+          <Route path="/ai-interior-designer" element={<Navigate to="/" replace />} />
 
           {/* Admin Login */}
           <Route path="/admin/login" element={<AdminLogin />} />

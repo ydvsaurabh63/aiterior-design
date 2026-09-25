@@ -102,11 +102,6 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/try-with-ai" className="text-amber-400 hover:text-amber-300 font-semibold transition-colors flex items-center gap-1.5 text-xs">
-                  <span>Try with AI Studio</span>
-                </Link>
-              </li>
-              <li>
                 <Link to="/contact" className="text-stone-400 hover:text-studio-bronzeLight transition-colors">
                   Contact Us
                 </Link>
