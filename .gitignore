@@ -3,11 +3,9 @@ node_modules/
 */node_modules/
 **/node_modules/
 
-# Standalone services (separate repos)
+# Standalone services (maintained in separate repositories)
 backend/
 admin-panel/
-uploads/
-frontend/
 
 # Environment Variables & Secrets
 .env
