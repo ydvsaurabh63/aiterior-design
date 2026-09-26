@@ -5,16 +5,16 @@ import {
   updateEnquiryStatus,
   deleteEnquiry
 } from '../controllers/enquiryController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import { protect, authorize } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 router.route('/')
   .post(createEnquiry)
-  .get(protect, getEnquiries);
+  .get(protect, authorize('superadmin', 'admin'), getEnquiries);
 
 router.route('/:id')
-  .put(protect, updateEnquiryStatus)
-  .delete(protect, deleteEnquiry);
+  .put(protect, authorize('superadmin', 'admin'), updateEnquiryStatus)
+  .delete(protect, authorize('superadmin', 'admin'), deleteEnquiry);
 
 export default router;

@@ -3,14 +3,17 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import Replicate from 'replicate';
+import { cloudinary, isCloudinaryConfigured } from '../config/cloudinary.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config();
 dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const REPLICATE_MODEL_VERSION = 'adirik/interior-design:76604baddc85b1b4616e1c6475eca080da339c8875bd4996705440484a6eac38';
+
 
 
 const MOCK_REDESIGN_GALLERY = {
@@ -179,6 +182,23 @@ export const generateRoomRedesign = async ({ file, imageUrl, roomType, style, cu
     }
 
     console.log('Replicate AI redesign completed successfully!');
+
+    // Permanently host AI generated design on Cloudinary
+    if (isCloudinaryConfigured && generatedUrl && generatedUrl.startsWith('http')) {
+      try {
+        console.log('[Cloudinary] Uploading AI-generated redesign to Cloudinary...');
+        const cloudUpload = await cloudinary.uploader.upload(generatedUrl, {
+          folder: 'interior-design-studio/ai-generated',
+          resource_type: 'image'
+        });
+        if (cloudUpload && cloudUpload.secure_url) {
+          generatedUrl = cloudUpload.secure_url;
+          console.log('[Cloudinary] Redesign successfully saved to Cloudinary:', generatedUrl);
+        }
+      } catch (uploadErr) {
+        console.warn('[Cloudinary] Could not re-host generated AI image, using direct URL:', uploadErr.message);
+      }
+    }
 
     return {
       generatedUrl,

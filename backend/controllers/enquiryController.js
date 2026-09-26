@@ -5,26 +5,34 @@ import Enquiry from '../models/Enquiry.js';
 // @access  Public
 export const createEnquiry = async (req, res) => {
   try {
-    const { name, phone, email, city, propertyType, budget, message } = req.body;
-
-    if (!name || !phone || !email || !city || !propertyType || !budget || !message) {
-      return res.status(400).json({ message: 'Please fill in all required fields' });
-    }
-
-    const enquiry = new Enquiry({
+    const {
       name,
       phone,
       email,
-      city,
-      propertyType,
-      budget,
-      message,
+      city = 'General',
+      propertyType = 'General',
+      budget = 'Flexible',
+      message
+    } = req.body;
+
+    if (!name || !phone || !email || !message) {
+      return res.status(400).json({ message: 'Please provide name, phone, email, and message.' });
+    }
+
+    const enquiry = new Enquiry({
+      name: name.trim(),
+      phone: phone.trim(),
+      email: email.trim().toLowerCase(),
+      city: (city || 'General').trim(),
+      propertyType: propertyType || 'General',
+      budget: budget || 'Flexible',
+      message: message.trim(),
       status: 'New'
     });
 
     const savedEnquiry = await enquiry.save();
     res.status(201).json({
-      message: 'Consultation enquiry received successfully. Our design team will contact you shortly.',
+      message: 'Enquiry received successfully. Our team will contact you shortly.',
       enquiry: savedEnquiry
     });
   } catch (error) {

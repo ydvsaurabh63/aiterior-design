@@ -12,6 +12,11 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 import interiorRoutes from './routes/interiorRoutes.js';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 dotenv.config();
 
 // Connect Database
@@ -19,8 +24,6 @@ connectDB();
 
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Middlewares
 app.use(cors({

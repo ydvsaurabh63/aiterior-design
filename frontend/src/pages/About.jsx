@@ -1,17 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import {
-  Compass,
-  Palette,
-  Eye,
-  CheckCircle2,
-  Award,
-  Users,
-  Building,
-  Sparkles,
-  ArrowRight
-} from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import ContactCTA from '../components/ContactCTA';
 
@@ -36,30 +25,6 @@ const About = () => {
       step: '04',
       title: 'Turnkey Execution & Styling',
       description: 'Our civil engineers and master artisans take full charge on-site, delivering on-time handover with final bespoke art curation.'
-    }
-  ];
-
-  const leadershipTeam = [
-    {
-      name: 'Arya Singhania',
-      role: 'Principal Architect & Founder',
-      experience: '14+ Years Experience',
-      image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-      bio: 'Alumnus of Architectural Association London, Arya directs the studio’s design ethos with focus on minimalist materiality and natural light.'
-    },
-    {
-      name: 'Devraj Sen',
-      role: 'Head of Interior Design',
-      experience: '11+ Years Experience',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
-      bio: 'Specializing in Japandi and contemporary Italian aesthetics, Devraj leads our bespoke joinery design and luxury residential projects.'
-    },
-    {
-      name: 'Mira Kapoor',
-      role: 'Director of Turnkey Operations',
-      experience: '10+ Years Experience',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
-      bio: 'Oversees seamless procurement, precision civil engineering, vendor audits, and zero-delay project delivery across all metro studios.'
     }
   ];
 
@@ -151,53 +116,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* 4. Leadership & Principal Designers */}
-      <section className="py-20 md:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionTitle
-          subtitle="Creative Leadership"
-          title="Meet the Minds Behind the Spaces"
-          description="A multidisciplinary collective of architects, interior stylists, and construction directors dedicated to uncompromised spatial beauty."
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {leadershipTeam.map((member, idx) => (
-            <motion.div
-              key={member.name}
-              initial={{ opacity: 0, y: 25 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.12 }}
-              className="bg-white border border-studio-border/80 overflow-hidden shadow-sm flex flex-col group"
-            >
-              <div className="aspect-[4/5] overflow-hidden bg-studio-sand">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                />
-              </div>
-              <div className="p-6 flex-grow flex flex-col justify-between">
-                <div>
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-studio-bronze font-bold block mb-1">
-                    {member.experience}
-                  </span>
-                  <h3 className="font-serif text-2xl font-normal text-studio-charcoal mb-1">
-                    {member.name}
-                  </h3>
-                  <p className="text-xs uppercase tracking-wider text-studio-muted font-medium mb-3">
-                    {member.role}
-                  </p>
-                  <p className="text-xs text-studio-muted leading-relaxed font-light">
-                    {member.bio}
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* 5. Final CTA */}
+      {/* 4. Final CTA */}
       <ContactCTA />
     </div>
   );

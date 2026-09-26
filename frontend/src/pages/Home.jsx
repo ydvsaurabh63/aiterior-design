@@ -1,46 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import { motion } from 'framer-motion';
 import {
-  ArrowRight,
-  Sparkles,
+  Palette,
   Layers,
   Award,
-  Compass,
-  Palette,
-  ShieldCheck,
   Hammer
 } from 'lucide-react';
 import Hero from '../components/Hero';
 import FurnitureTryOnShowcase from '../components/FurnitureTryOnShowcase';
 import FurniturePairingShowcase from '../components/FurniturePairingShowcase';
 import SectionTitle from '../components/SectionTitle';
-import TestimonialCard from '../components/TestimonialCard';
-import LoadingSpinner from '../components/LoadingSpinner';
-import { fallbackTestimonials } from '../data/fallbackProjects';
-import { testimonialApi } from '../services/api';
 
 const Home = () => {
-  const [testimonials, setTestimonials] = useState(fallbackTestimonials);
-  const [loadingTestimonials, setLoadingTestimonials] = useState(false);
-
-  useEffect(() => {
-    const loadHomeData = async () => {
-      try {
-        const testData = await testimonialApi.getAll();
-        if (Array.isArray(testData) && testData.length > 0) {
-          setTestimonials(testData);
-        }
-      } catch (err) {
-        console.warn('Using seeded testimonials data:', err.message);
-      } finally {
-        setLoadingTestimonials(false);
-      }
-    };
-
-    loadHomeData();
-  }, []);
-
   const whyChooseUsFeatures = [
     {
       icon: Palette,
@@ -72,16 +43,10 @@ const Home = () => {
       {/* 2. Furniture Try-On / Room Visualizer */}
       <FurnitureTryOnShowcase />
 
-      {/* 3. Furniture Pairing / "Not sure what goes with what?" (Which chairs go here?) */}
+      {/* 3. Furniture Pairing / "Not sure what goes with what?" */}
       <FurniturePairingShowcase />
 
-
-
-
-
-
-
-      {/* 5. Why Choose Us Section */}
+      {/* 4. Why Choose Us Section */}
       <section className="py-16 sm:py-20 md:py-28 bg-white border-y border-studio-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionTitle
@@ -121,29 +86,6 @@ const Home = () => {
             })}
           </div>
         </div>
-      </section>
-
-      {/* 6. Testimonials Section */}
-      <section className="py-16 sm:py-20 md:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionTitle
-          subtitle="Client Stories"
-          title="Words of Appreciation"
-          description="Read genuine experiences from discerning homeowners and villa owners who entrusted their residences to our studio."
-        />
-
-        {loadingTestimonials ? (
-          <LoadingSpinner text="Loading client reviews..." />
-        ) : testimonials.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {testimonials.map((t, idx) => (
-              <TestimonialCard key={t._id || idx} testimonial={t} index={idx} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-10 bg-white border border-studio-border">
-            <p className="text-studio-muted text-xs">No testimonials available yet.</p>
-          </div>
-        )}
       </section>
     </div>
   );

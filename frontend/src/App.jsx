@@ -1,9 +1,8 @@
 import React from 'react';
-import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import ProtectedRoute from './components/ProtectedRoute';
 
 // Public Pages
 import Home from './pages/Home';
@@ -12,23 +11,32 @@ import Projects from './pages/Projects';
 import CategoryProjects from './pages/CategoryProjects';
 import ProjectDetails from './pages/ProjectDetails';
 import Contact from './pages/Contact';
-import TryWithAI from './pages/TryWithAI';
-import AIInteriorDesigner from './pages/AIInteriorDesigner';
 import NotFound from './pages/NotFound';
 
-// Admin Pages
-import AdminLogin from './admin/AdminLogin';
-import AdminDashboard from './admin/AdminDashboard';
-import ManageProjects from './admin/ManageProjects';
-import AddProject from './admin/AddProject';
-import EditProject from './admin/EditProject';
-import ManageTestimonials from './admin/ManageTestimonials';
-import ManageEnquiries from './admin/ManageEnquiries';
+// Redirect helper for old admin links to the new standalone admin panel
+const AdminPortalRedirect = () => {
+  const adminUrl = import.meta.env.VITE_ADMIN_URL || 'http://localhost:5174';
+
+  React.useEffect(() => {
+    window.location.href = adminUrl;
+  }, [adminUrl]);
+
+  return (
+    <div className="min-h-[60vh] flex flex-col items-center justify-center text-center p-6">
+      <div className="w-8 h-8 border-2 border-studio-bronze border-t-transparent rounded-full animate-spin mb-4" />
+      <p className="text-sm font-medium text-studio-charcoal">Opening Studio Admin Portal...</p>
+      <p className="text-xs text-studio-muted mt-1">Admin has moved to its dedicated portal ({adminUrl})</p>
+      <a
+        href={adminUrl}
+        className="mt-5 px-5 py-2.5 bg-studio-charcoal text-white text-xs uppercase tracking-wider font-semibold hover:bg-studio-bronze transition-colors"
+      >
+        Go to Admin Portal
+      </a>
+    </div>
+  );
+};
 
 function App() {
-  const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin');
-
   return (
     <div className="flex flex-col min-h-screen bg-studio-bg text-studio-charcoal selection:bg-studio-bronze selection:text-white">
       <Toaster
@@ -52,8 +60,7 @@ function App() {
         }}
       />
 
-      {/* Render Public Navbar & Footer only on non-admin routes */}
-      {!isAdminRoute && <Navbar />}
+      <Navbar />
 
       <div className="flex-grow">
         <Routes>
@@ -79,65 +86,15 @@ function App() {
           <Route path="/try-with-ai" element={<Navigate to="/" replace />} />
           <Route path="/ai-interior-designer" element={<Navigate to="/" replace />} />
 
-          {/* Admin Login */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-
-          {/* Protected Admin Routes */}
-          <Route
-            path="/admin/dashboard"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/projects"
-            element={
-              <ProtectedRoute>
-                <ManageProjects />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/projects/add"
-            element={
-              <ProtectedRoute>
-                <AddProject />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/projects/edit/:id"
-            element={
-              <ProtectedRoute>
-                <EditProject />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/testimonials"
-            element={
-              <ProtectedRoute>
-                <ManageTestimonials />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/enquiries"
-            element={
-              <ProtectedRoute>
-                <ManageEnquiries />
-              </ProtectedRoute>
-            }
-          />
+          {/* Redirect any legacy /admin route to standalone admin panel */}
+          <Route path="/admin/*" element={<AdminPortalRedirect />} />
 
           {/* 404 Catch-All */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
 
-      {!isAdminRoute && <Footer />}
+      <Footer />
     </div>
   );
 }

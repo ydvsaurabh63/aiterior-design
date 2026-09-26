@@ -20,17 +20,16 @@ const enquirySchema = new mongoose.Schema(
     },
     city: {
       type: String,
-      required: [true, 'City is required'],
+      default: 'General',
       trim: true
     },
     propertyType: {
       type: String,
-      required: [true, 'Property type is required'],
-      enum: ['1 BHK', '2 BHK', '3 BHK', '4 BHK', 'Villa', 'Other']
+      default: 'General'
     },
     budget: {
       type: String,
-      required: [true, 'Budget range is required']
+      default: 'Flexible'
     },
     message: {
       type: String,

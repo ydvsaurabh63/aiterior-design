@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
+import Logo from '../components/Logo';
 import {
   LayoutDashboard,
   Layers,
@@ -8,49 +9,100 @@ import {
   Inbox,
   LogOut,
   ExternalLink,
-  ShieldCheck
+  Users,
+  ShieldCheck,
+  UserCheck,
+  Sparkles
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const AdminLayout = ({ children, title, subtitle, actions }) => {
-  const { admin, logout } = useAuth();
+  const { admin, logout, role, isSuperAdmin, isClient } = useAuth();
 
-  const navItems = [
-    { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
-    { name: 'All Projects', path: '/admin/projects', icon: Layers },
-    { name: 'Add Project', path: '/admin/projects/add', icon: PlusCircle },
-    { name: 'Testimonials', path: '/admin/testimonials', icon: MessageSquareQuote },
-    { name: 'Enquiries', path: '/admin/enquiries', icon: Inbox }
-  ];
+  // Navigation tailored by role
+  let navItems = [];
+
+  if (isClient) {
+    navItems = [
+      { name: 'My Portal', path: '/client/portal', icon: LayoutDashboard },
+      { name: 'Studio Portfolio', path: '/admin/projects', icon: Layers }
+    ];
+  } else if (isSuperAdmin) {
+    navItems = [
+      { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+      { name: 'All Projects', path: '/admin/projects', icon: Layers },
+      { name: 'Add Project', path: '/admin/projects/add', icon: PlusCircle },
+      { name: 'Testimonials', path: '/admin/testimonials', icon: MessageSquareQuote },
+      { name: 'Enquiries', path: '/admin/enquiries', icon: Inbox },
+      { name: 'Users & Roles', path: '/admin/users', icon: Users }
+    ];
+  } else {
+    // Regular Admin
+    navItems = [
+      { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+      { name: 'All Projects', path: '/admin/projects', icon: Layers },
+      { name: 'Add Project', path: '/admin/projects/add', icon: PlusCircle },
+      { name: 'Testimonials', path: '/admin/testimonials', icon: MessageSquareQuote },
+      { name: 'Enquiries', path: '/admin/enquiries', icon: Inbox },
+      { name: 'Manage Clients', path: '/admin/users', icon: Users }
+    ];
+  }
+
+  // Role display badge configuration
+  const getRoleBadge = () => {
+    switch (role) {
+      case 'superadmin':
+        return {
+          label: 'Superadmin',
+          classes: 'bg-amber-950/80 text-amber-300 border-amber-600/50 shadow-inner'
+        };
+      case 'client':
+        return {
+          label: 'Client Portal',
+          classes: 'bg-stone-800 text-stone-300 border-stone-700'
+        };
+      default:
+        return {
+          label: 'Studio Admin',
+          classes: 'bg-stone-800 text-studio-bronze border-stone-700'
+        };
+    }
+  };
+
+  const roleBadge = getRoleBadge();
 
   return (
     <div className="min-h-screen bg-studio-bg flex flex-col pt-16">
       {/* Top Admin Bar */}
       <header className="fixed top-0 inset-x-0 z-40 bg-studio-charcoal text-white h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 border-b border-stone-800">
         <div className="flex items-center gap-6">
-          <Link to="/admin/dashboard" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 border border-studio-bronze flex items-center justify-center font-serif text-xs font-bold text-studio-bronze">
-              AF
-            </div>
-            <span className="font-serif text-base tracking-widest uppercase font-medium">
-              Studio Admin
+          <Link to={isClient ? "/client/portal" : "/admin/dashboard"} className="flex items-center gap-2.5">
+            <Logo size="sm" variant="dark" showTagline={false} />
+            <span
+              className={`hidden md:inline-block ml-2 text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded border ${roleBadge.classes}`}
+            >
+              {roleBadge.label}
             </span>
           </Link>
 
-          <Link
-            to="/"
+          <a
+            href={import.meta.env.VITE_SITE_URL || 'http://localhost:5173'}
             target="_blank"
             rel="noreferrer"
             className="hidden sm:inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-white transition-colors"
           >
             <span>View Live Website</span>
             <ExternalLink className="w-3 h-3" />
-          </Link>
+          </a>
         </div>
 
         <div className="flex items-center gap-4">
           <div className="hidden sm:flex flex-col text-right">
-            <span className="text-xs font-medium text-white">{admin?.name || 'Administrator'}</span>
+            <div className="flex items-center gap-1.5 justify-end">
+              <span className="text-xs font-medium text-white">{admin?.name || 'User'}</span>
+              {isSuperAdmin && <ShieldCheck className="w-3.5 h-3.5 text-amber-400" title="Superadmin Privileges" />}
+              {!isSuperAdmin && !isClient && <UserCheck className="w-3.5 h-3.5 text-studio-bronze" />}
+            </div>
             <span className="text-[10px] text-stone-400">{admin?.email}</span>
           </div>
 
@@ -64,7 +116,7 @@ const AdminLayout = ({ children, title, subtitle, actions }) => {
         </div>
       </header>
 
-      {/* Admin Secondary Navigation Ribbon */}
+      {/* Navigation Ribbon */}
       <div className="bg-white border-b border-studio-border sticky top-16 z-30 shadow-sm overflow-x-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-2 sm:gap-6 py-2 min-w-max">
           {navItems.map((item) => {
@@ -73,7 +125,11 @@ const AdminLayout = ({ children, title, subtitle, actions }) => {
               <NavLink
                 key={item.path}
                 to={item.path}
-                end={item.path === '/admin/dashboard' || item.path === '/admin/projects'}
+                end={
+                  item.path === '/admin/dashboard' ||
+                  item.path === '/admin/projects' ||
+                  item.path === '/client/portal'
+                }
                 className={({ isActive }) =>
                   `inline-flex items-center gap-2 px-3 py-2 text-xs uppercase tracking-wider font-semibold transition-colors ${
                     isActive

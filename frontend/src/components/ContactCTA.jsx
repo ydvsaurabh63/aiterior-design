@@ -67,7 +67,7 @@ const ContactCTA = () => {
           </Link>
 
           <a
-            href="https://wa.me/919876543210"
+            href="https://wa.me/918147540362"
             target="_blank"
             rel="noreferrer"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 border border-white/30 text-white text-xs uppercase tracking-[0.2em] font-medium hover:bg-white/10 transition-all duration-300"

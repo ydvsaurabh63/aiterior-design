@@ -37,7 +37,7 @@ const Footer = () => {
             </Link>
 
             <p className="text-sm text-stone-400 leading-relaxed max-w-sm">
-              Reimagining bespoke interior spaces with AI visualization, architectural craft, and natural materials.
+              Disruptive Innovation Through Autonomous Intelligence. Building AI agents that run businesses - not just assist them.
             </p>
 
             <div className="pt-2 flex items-center gap-3">
@@ -69,7 +69,7 @@ const Footer = () => {
                 <span className="text-xs font-bold font-serif">P</span>
               </a>
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/918147540362"
                 target="_blank"
                 rel="noreferrer"
                 aria-label="WhatsApp"
@@ -97,19 +97,19 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/projects" className="text-stone-400 hover:text-studio-bronzeLight transition-colors">
-                  All Projects
-                </Link>
-              </li>
-              <li>
                 <Link to="/contact" className="text-stone-400 hover:text-studio-bronzeLight transition-colors">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link to="/admin/login" className="text-stone-500 hover:text-stone-300 text-xs transition-colors">
+                <a
+                  href={import.meta.env.VITE_ADMIN_URL || 'http://localhost:5174/login'}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-stone-500 hover:text-stone-300 text-xs transition-colors"
+                >
                   Admin Portal
-                </Link>
+                </a>
               </li>
             </ul>
           </div>
@@ -163,29 +163,29 @@ const Footer = () => {
             <ul className="space-y-3 text-sm text-stone-400">
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-studio-bronze mt-1 flex-shrink-0" />
-                <span>Level 4, Signature Atrium, Bandra Kurla Complex, Mumbai 400051</span>
+                <span>C-116, Sector-2, Noida, Uttar Pradesh – 201301, India</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-studio-bronze flex-shrink-0" />
-                <a href="tel:+919876543210" className="hover:text-white transition-colors">
-                  +91 (022) 6890 4500
+                <a href="tel:+918147540362" className="hover:text-white transition-colors">
+                  +91 81475 40362
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-4 h-4 text-studio-bronze flex-shrink-0" />
-                <a href="mailto:design@aurastudio.com" className="hover:text-white transition-colors">
-                  design@aurastudio.com
+                <a href="mailto:contact@diintech.com" className="hover:text-white transition-colors">
+                  contact@diintech.com
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <MessageCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
                 <a
-                  href="https://wa.me/919876543210"
+                  href="https://wa.me/918147540362"
                   target="_blank"
                   rel="noreferrer"
                   className="text-green-400 hover:underline"
                 >
-                  WhatsApp: +91 98765 43210
+                  WhatsApp: +91 81475 40362
                 </a>
               </li>
             </ul>
@@ -194,13 +194,18 @@ const Footer = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-4">
-          <p>© {currentYear} aiterior Technologies Pvt. Ltd. All rights reserved.</p>
+          <p>© {currentYear} Diin Technologies Pvt. Ltd. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <span>Mumbai • Bengaluru • New Delhi • Goa</span>
+            <span>Noida • Delhi NCR • India</span>
             <span className="hidden sm:inline">•</span>
-            <Link to="/admin/login" className="hover:text-stone-300 transition-colors">
+            <a
+              href={import.meta.env.VITE_ADMIN_URL || 'http://localhost:5174/login'}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-stone-300 transition-colors"
+            >
               Staff Login
-            </Link>
+            </a>
           </div>
         </div>
       </div>

@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, ArrowLeft, UserCheck, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../components/Logo';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, role, isClient } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = location.state?.from?.pathname || '/admin/dashboard';
-
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(from, { replace: true });
+      if (isClient) {
+        navigate('/client/portal', { replace: true });
+      } else {
+        const dest = location.state?.from?.pathname || '/admin/dashboard';
+        navigate(dest === '/admin/login' ? '/admin/dashboard' : dest, { replace: true });
+      }
     }
-  }, [isAuthenticated, navigate, from]);
+  }, [isAuthenticated, isClient, navigate, location.state]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,27 +31,32 @@ const AdminLogin = () => {
     const result = await login(email, password);
     setLoading(false);
     if (result.success) {
-      navigate(from, { replace: true });
+      if (result.user?.role === 'client') {
+        navigate('/client/portal', { replace: true });
+      } else {
+        const dest = location.state?.from?.pathname || '/admin/dashboard';
+        navigate(dest === '/admin/login' ? '/admin/dashboard' : dest, { replace: true });
+      }
     }
   };
 
-  const handleDemoFill = () => {
-    setEmail('admin@studio.com');
-    setPassword('admin123');
+  const handleFill = (userEmail, userPass) => {
+    setEmail(userEmail);
+    setPassword(userPass);
   };
 
   return (
-    <div className="min-h-screen bg-studio-bg flex items-center justify-center p-4 pt-20">
+    <div className="min-h-screen bg-studio-bg flex items-center justify-center p-4 pt-16">
       <div className="max-w-md w-full">
         {/* Back link */}
         <div className="mb-6">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-studio-muted hover:text-studio-charcoal"
+          <a
+            href={import.meta.env.VITE_SITE_URL || 'http://localhost:5173'}
+            className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-studio-muted hover:text-studio-charcoal transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Public Website</span>
-          </Link>
+          </a>
         </div>
 
         <motion.div
@@ -57,14 +66,12 @@ const AdminLogin = () => {
         >
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-12 h-12 rounded-none border border-studio-charcoal flex items-center justify-center font-serif text-lg font-bold text-studio-charcoal mx-auto mb-4">
-              AF
-            </div>
-            <h1 className="font-serif text-3xl text-studio-charcoal mb-1">
-              Studio Portal Login
+            <Logo size="md" className="justify-center mx-auto mb-4" />
+            <h1 className="font-serif text-2xl text-studio-charcoal mb-1">
+              Studio Portal Access
             </h1>
             <p className="text-xs uppercase tracking-widest text-studio-muted font-medium">
-              Administrative Access
+              Superadmin • Admin • Client Portal
             </p>
           </div>
 
@@ -72,7 +79,7 @@ const AdminLogin = () => {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-xs uppercase tracking-wider font-semibold text-studio-charcoal mb-2">
-                Administrator Email
+                Email Address
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-studio-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -113,26 +120,44 @@ const AdminLogin = () => {
                 <span>Authenticating...</span>
               ) : (
                 <>
-                  <span>Sign In to Dashboard</span>
+                  <span>Sign In</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
 
-          {/* Demo Credentials Quick Fill */}
-          <div className="mt-8 pt-6 border-t border-studio-border text-center">
-            <p className="text-xs text-studio-muted mb-2">Default Admin Credentials:</p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-studio-sand border border-studio-border text-xs text-studio-charcoal rounded-none">
-              <code>admin@studio.com</code> / <code>admin123</code>
-            </div>
-            <div className="mt-3">
+          {/* Demo Roles Quick Fill */}
+          <div className="mt-8 pt-6 border-t border-studio-border">
+            <p className="text-[11px] uppercase tracking-wider text-studio-muted font-bold text-center mb-3">
+              Quick Test Accounts:
+            </p>
+            <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
-                onClick={handleDemoFill}
-                className="text-xs text-studio-bronze hover:underline font-semibold uppercase tracking-wider"
+                onClick={() => handleFill('superadmin@studio.com', 'admin123')}
+                className="p-2 border border-amber-300 bg-amber-50 hover:bg-amber-100 text-left transition-colors flex flex-col items-center text-center"
               >
-                Click to Auto-fill Demo Credentials
+                <ShieldCheck className="w-4 h-4 text-amber-700 mb-1" />
+                <span className="text-[10px] uppercase font-bold text-amber-900">Superadmin</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleFill('admin@studio.com', 'admin123')}
+                className="p-2 border border-stone-300 bg-stone-50 hover:bg-stone-100 text-left transition-colors flex flex-col items-center text-center"
+              >
+                <UserCheck className="w-4 h-4 text-studio-bronze mb-1" />
+                <span className="text-[10px] uppercase font-bold text-stone-800">Admin</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleFill('client@studio.com', 'client123')}
+                className="p-2 border border-blue-200 bg-blue-50 hover:bg-blue-100 text-left transition-colors flex flex-col items-center text-center"
+              >
+                <User className="w-4 h-4 text-blue-700 mb-1" />
+                <span className="text-[10px] uppercase font-bold text-blue-900">Client</span>
               </button>
             </div>
           </div>

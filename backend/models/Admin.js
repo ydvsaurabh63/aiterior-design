@@ -18,6 +18,20 @@ const adminSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true
+    },
+    role: {
+      type: String,
+      enum: ['superadmin', 'admin', 'client'],
+      default: 'admin'
+    },
+    status: {
+      type: String,
+      enum: ['active', 'inactive'],
+      default: 'active'
+    },
+    phone: {
+      type: String,
+      default: ''
     }
   },
   { timestamps: true }

@@ -394,14 +394,38 @@ const seedDB = async () => {
     await Enquiry.deleteMany({});
     console.log('Cleared existing data.');
 
-    // Seed Admin
+    // Seed Superadmin, Admin & Client accounts
+    const superadmin = new Admin({
+      name: 'Studio Chief Superadmin',
+      email: 'superadmin@studio.com',
+      password: 'admin123',
+      role: 'superadmin',
+      phone: '+91 99999 11111'
+    });
+    await superadmin.save();
+
     const admin = new Admin({
       name: 'Studio Principal Admin',
       email: 'admin@studio.com',
-      password: 'admin123'
+      password: 'admin123',
+      role: 'admin',
+      phone: '+91 98888 22222'
     });
     await admin.save();
-    console.log('Admin account created: admin@studio.com / admin123');
+
+    const client = new Admin({
+      name: 'Kabir Malhotra (Client)',
+      email: 'client@studio.com',
+      password: 'client123',
+      role: 'client',
+      phone: '+91 98201 45678'
+    });
+    await client.save();
+
+    console.log('Seeded accounts:');
+    console.log('  👑 Superadmin : superadmin@studio.com / admin123');
+    console.log('  🛡️ Admin      : admin@studio.com / admin123');
+    console.log('  👤 Client     : client@studio.com / client123');
 
     // Seed Projects
     await Project.insertMany(sampleProjects);

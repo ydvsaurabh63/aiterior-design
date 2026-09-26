@@ -1,0 +1,17 @@
+{
+  "name": "aiterior-interior-design",
+  "version": "1.0.0",
+  "private": true,
+  "description": "aiterior — Luxury Interior Architecture & AI Studio with Standalone Admin Panel",
+  "scripts": {
+    "dev:all": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\" \"npm --prefix admin-panel run dev\"",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:admin": "npm --prefix admin-panel run dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:admin": "npm --prefix admin-panel run build",
+    "build:all": "npm --prefix frontend run build && npm --prefix admin-panel run build",
+    "init:users": "npm --prefix backend run init:users",
+    "migrate:cloudinary": "npm --prefix backend run migrate:cloudinary"
+  }
+}
