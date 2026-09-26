@@ -6,6 +6,7 @@ node_modules/
 # Standalone services (maintained in separate repositories)
 backend/
 admin-panel/
+frontend/
 
 # Environment Variables & Secrets
 .env
