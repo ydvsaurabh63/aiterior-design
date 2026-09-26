@@ -1,17 +1,33 @@
 {
-  "name": "aiterior-interior-design",
-  "version": "1.0.0",
+  "name": "frontend",
   "private": true,
-  "description": "aiterior — Luxury Interior Architecture & AI Studio with Standalone Admin Panel",
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev:all": "concurrently \"npm --prefix backend run dev\" \"npm --prefix frontend run dev\" \"npm --prefix admin-panel run dev\"",
-    "dev:backend": "npm --prefix backend run dev",
-    "dev:frontend": "npm --prefix frontend run dev",
-    "dev:admin": "npm --prefix admin-panel run dev",
-    "build:frontend": "npm --prefix frontend run build",
-    "build:admin": "npm --prefix admin-panel run build",
-    "build:all": "npm --prefix frontend run build && npm --prefix admin-panel run build",
-    "init:users": "npm --prefix backend run init:users",
-    "migrate:cloudinary": "npm --prefix backend run migrate:cloudinary"
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "oxlint",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.6.1",
+    "axios": "^1.20.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^13.4.0",
+    "lucide-react": "^1.47.0",
+    "postcss": "^8.5.28",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-hot-toast": "^2.6.1",
+    "react-router-dom": "^7.18.4",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^3.4.19"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "vite": "^8.3.0"
   }
 }
